@@ -1,0 +1,30 @@
+# m2d
+
+  pwd
+  mkdir -p /ibm/oc-mirror-cache /ibm/oc-mirror-tmp
+  export TMPDIR=/ibm/oc-mirror-tmp
+  GPU_OUT="file://$(pwd -P)/gpu-operator"
+  oc mirror --v2 -c imageset.yaml --cache-dir /ibm/oc-mirror-cache "$GPU_OUT"
+
+
+# d2m
+gpu-operator-imageset.yaml
+gpu-operator/
+
+### 1. 반입할 레지스트리 주소 입력
+
+주소를 아직 받지 않아서 직접 입력하도록 했어. docker:// 없이 입력하면 돼.
+
+
+podman login "$LOCAL_REGISTRY"
+
+### 2. 로그인 성공 후 D2M 실행
+
+mkdir -p /ibm/oc-mirror-cache
+GPU_FROM="file://$(pwd -P)/gpu-operator"
+oc mirror --v2 -c imageset.yaml --from "$GPU_FROM" --cache-dir /ibm/oc-mirror-cache "docker://$LOCAL_REGISTRY"
+
+### 3. 끝난 직후 확인
+
+echo "oc-mirror 종료 코드: $?"
+ls -lh gpu-operator/working-dir/cluster-resources/

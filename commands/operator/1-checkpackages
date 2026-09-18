@@ -1,0 +1,2 @@
+GPU_CATALOG=registry.redhat.io/redhat/certified-operator-index:v4.18
+oc mirror list operators --catalog="$GPU_CATALOG" --package=gpu-operator-certified
